@@ -26,6 +26,10 @@ client.connect(err => {
     const serviceCollection = client.db("dashboard").collection("service");
     const ordersCollection = client.db("dashboard").collection("order");
 
+    ///portfoliooo///
+    const portfolioooReview = client.db("dashboard").collection("naimReview")
+    const portfolioooMessage = client.db("dashboard").collection("naimMessage")
+
     // make admin
     app.post('/addAdmin', (req, res) => {
         const email = req.body.email;
@@ -100,6 +104,7 @@ client.connect(err => {
             })
     })
 
+    // get specific order 
     app.get('/orders', (req, res) => {
         ordersCollection.find({ email: req.query.email })
             .toArray((err, documents) => {
@@ -135,6 +140,41 @@ client.connect(err => {
             .toArray((err, totalAdmin) => {
                 res.send(totalAdmin.length > 0);
             })
+    })
+
+    ////////////////portfoliooo////////////////
+    // post reviews
+
+    app.post('/nrdAddReview', (req, res) => {
+        const newReview = req.body;
+        portfolioooReview.insertOne(newReview)
+            .then(result => {
+                console.log(result.insertedCount);
+                res.send(result.insertedCount > 0);
+            })
+
+
+    })
+
+    //get reviews
+    app.get('/naimReview', (req, res) => {
+        portfolioooReview.find()
+            .toArray((err, result) => {
+                // console.log(err);
+                res.send(result);
+            })
+    })
+
+    // post message
+    app.post('/addMessage', (req, res) => {
+        const newMessage = req.body;
+        portfolioooMessage.insertOne(newMessage)
+            .then(result => {
+                console.log(result.insertedCount);
+                res.send(result.insertedCount > 0);
+            })
+
+
     })
 
 })
